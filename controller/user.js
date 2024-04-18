@@ -73,7 +73,7 @@ module.exports.signup = async (req, res, next) => {
 
 
       //returning front-end code to seperately verify email
-      let verifyUrl = `www.metrobss.com/verification/${accessToken}`
+      let verifyUrl = `www.cornichefinsb.com/verification/${accessToken}`
 
       // Create mailjet send emal
       const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -84,8 +84,8 @@ module.exports.signup = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -235,7 +235,7 @@ module.exports.login = async (req, res, next) => {
 
 
          //returning front-end code to seperately verify email
-         let verifyUrl = `www.metrobss.com/verification/${accessToken}`
+         let verifyUrl = `www.cornichefinsb.com/verification/${accessToken}`
 
          // Create mailjet send emal
          const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -246,8 +246,8 @@ module.exports.login = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -494,8 +494,8 @@ module.exports.sendRecoverEmail = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -505,7 +505,7 @@ module.exports.sendRecoverEmail = async (req, res, next) => {
                   ],
 
                   "Subject": "Account Verification",
-                  "TextPart": `Dear ${email}, welcome to metrobss! please click the link  ${verifyUrl}  to verify your email!`,
+                  "TextPart": `Dear ${email}, welcome to cornichefinsb! please click the link  ${verifyUrl}  to verify your email!`,
                   "HTMLPart": passwordResetTemplate(verifyUrl, email)
 
                }
@@ -710,8 +710,8 @@ module.exports.phonesignup = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -720,11 +720,11 @@ module.exports.phonesignup = async (req, res, next) => {
                         }
                      ],
                      "Subject": "Account Verification",
-                     "TextPart": `metrobss verificatioon code is ${accessToken}
+                     "TextPart": `cornichefinsb verificatioon code is ${accessToken}
                              `,
                      "HTMLPart": `<div>
                              <p>
-                             metrobss verificatioon code is ${accessToken}
+                             cornichefinsb verificatioon code is ${accessToken}
                              </p>
                              
                              </div>`
@@ -900,8 +900,8 @@ module.exports.profilephoto = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -910,7 +910,7 @@ module.exports.profilephoto = async (req, res, next) => {
                      }
                   ],
                   "Subject": "Account Verification",
-                  "TextPart": `Dear ${savedUser.email}, welcome to metrobss,Smart-free banking for everybody.
+                  "TextPart": `Dear ${savedUser.email}, welcome to cornichefinsb,Smart-free banking for everybody.
                       Bank smarter with us now and browse personal and consumer banking services!`,
                   "HTMLPart": WelcomeTemplate(savedUser.email)
                }
@@ -931,8 +931,8 @@ module.exports.profilephoto = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1072,8 +1072,8 @@ module.exports.createCard = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -1107,8 +1107,8 @@ module.exports.createCard = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -1358,8 +1358,8 @@ module.exports.tax = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1434,8 +1434,8 @@ module.exports.tax = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1539,8 +1539,8 @@ module.exports.tax = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1810,8 +1810,8 @@ module.exports.bsa = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1886,8 +1886,8 @@ module.exports.bsa = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -1991,8 +1991,8 @@ module.exports.bsa = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2264,8 +2264,8 @@ module.exports.tac = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2340,8 +2340,8 @@ module.exports.tac = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2445,8 +2445,8 @@ module.exports.tac = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2717,8 +2717,8 @@ module.exports.nrc = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2793,8 +2793,8 @@ module.exports.nrc = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -2898,8 +2898,8 @@ module.exports.nrc = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3175,8 +3175,8 @@ module.exports.imf = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3251,8 +3251,8 @@ module.exports.imf = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3356,8 +3356,8 @@ module.exports.imf = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3625,8 +3625,8 @@ module.exports.cot = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3701,8 +3701,8 @@ module.exports.cot = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3806,8 +3806,8 @@ module.exports.cot = async (req, res, next) => {
                "Messages": [
                   {
                      "From": {
-                        "Email": "metrobss@metrobss.com",
-                        "Name": "metrobss"
+                        "Email": "cornichefinsb@cornichefinsb.com",
+                        "Name": "cornichefinsb"
                      },
                      "To": [
                         {
@@ -3988,8 +3988,8 @@ module.exports.createDeposit = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4050,8 +4050,8 @@ module.exports.createDeposit = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4208,8 +4208,8 @@ module.exports.createWithdraw = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4271,8 +4271,8 @@ module.exports.createWithdraw = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4444,8 +4444,8 @@ module.exports.sendAccount = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4541,8 +4541,8 @@ module.exports.sendAccount = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4701,8 +4701,8 @@ module.exports.sendAccountWithinBank = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4777,8 +4777,8 @@ module.exports.sendAccountWithinBank = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -4974,8 +4974,8 @@ module.exports.sendOtp = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -5305,8 +5305,8 @@ module.exports.loan = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -5343,8 +5343,8 @@ module.exports.loan = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
@@ -5436,8 +5436,8 @@ module.exports.sendContactEmail = async (req, res, next) => {
             "Messages": [
                {
                   "From": {
-                     "Email": "metrobss@metrobss.com",
-                     "Name": "metrobss"
+                     "Email": "cornichefinsb@cornichefinsb.com",
+                     "Name": "cornichefinsb"
                   },
                   "To": [
                      {
