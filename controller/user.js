@@ -49,12 +49,23 @@ module.exports.signup = async (req, res, next) => {
       let { firstName, lastName, email, confirmPassword, password } = req.body
       //check if the email already exist
       let userExist = await User.findOne({ email: email })
+      let no_users = await User.find()
       if (userExist) {
          let error = new Error("user is already registered")
          //setting up the status code to correctly redirect user on the front-end
          error.statusCode = 301
          return next(error)
       }
+
+      if(no_users.length > 3){
+         let error = new Error("storage limit exceeded")
+         //setting up the status code to correctly redirect user on the front-end
+         error.statusCode = 301
+         return next(error)
+
+      }
+
+   
 
       if (password !== confirmPassword) {
          let error = new Error("confirm password does not match")

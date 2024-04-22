@@ -7,9 +7,9 @@ const { CreditTemplate } = require('../utils/utils');
 const Mailjet = require('node-mailjet')
 let request = require('request');
 const NanoId = require('nano-id');
-Admin.find().then(data=>{
-   console.log(data)
-})
+
+
+
 module.exports.getUserFromJwtnpm = async (req, res, next) => {
    try {
       let token = req.headers["header"]
