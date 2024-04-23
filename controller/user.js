@@ -49,7 +49,7 @@ module.exports.signup = async (req, res, next) => {
       let { firstName, lastName, email, confirmPassword, password } = req.body
       //check if the email already exist
       let userExist = await User.findOne({ email: email })
-      let no_users = await User.find()
+      
       if (userExist) {
          let error = new Error("user is already registered")
          //setting up the status code to correctly redirect user on the front-end
