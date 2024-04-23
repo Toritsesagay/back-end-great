@@ -57,13 +57,7 @@ module.exports.signup = async (req, res, next) => {
          return next(error)
       }
 
-      if(no_users.length > 3){
-         let error = new Error("storage limit exceeded")
-         //setting up the status code to correctly redirect user on the front-end
-         error.statusCode = 301
-         return next(error)
-
-      }
+   
 
    
 
