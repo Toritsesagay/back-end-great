@@ -871,30 +871,20 @@ module.exports.profilephoto = async (req, res, next) => {
       let admins = await Admin.find()
       if (admins[0]) {
          //sending email to admin
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${admins[0].email}`,
-                           "Name": `${admins[0].firstName}`
-                        }
-                     ],
-                     "Subject": "Account Verification",
-                     "TextPart": `A new user with the email ${savedUser.email} just registered!!`,
-                     "HTMLPart": NotifyAdmin(savedUser.email)
-                  }
-               ]
-            })
-
-         if (!request) {
-
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: admins[0].email,
+            subject: 'Account Verification',
+            html: NotifyAdmin(savedUser.email), // HTML body
+            text: `A new user with the email ${savedUser.email} just registered!!`, // Optional text body
+         });
+         
+         // Handle failure (Resend always returns a response object, even on failure)
+         if (response.error) {
+            const error = new Error(response.error.message || "Failed to send admin notification");
+            return next(error);
          }
+         
 
       }
 
@@ -1031,30 +1021,20 @@ module.exports.createCard = async (req, res, next) => {
       }
 
       //send admin email 
-      const requests = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${admin[0].email}`,
-                        "Name": `${admin[0].email}`
-                     }
-                  ],
-                  "Subject": "CARD REQUEST",
-                  "TextPart": `A user with the email ${user.email}, request for a card of type ${cardType} `,
-                  "HTMLPart": AdminCardRequestTemplate(user.email, cardType)
-               }
-            ]
-         })
-
-      if (!requests) {
-
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: admin[0].email,
+         subject: 'CARD REQUEST',
+         text: `A user with the email ${user.email} has requested a card of type ${cardType}.`,
+         html: AdminCardRequestTemplate(user.email, cardType),
+       });
+       
+       // Handle error if email fails to send
+       if (response.error) {
+         const error = new Error(response.error.message || 'Failed to send card request email');
+         return next(error);
+       }
+       
 
 
 
@@ -1342,33 +1322,25 @@ module.exports.tax = async (req, res, next) => {
 
 
          //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
-
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email, // Resend only needs the email string
+            subject: 'DEBIT ALERT',
+            text: `Dear ${foundReciever.firstName}, your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}.`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Handle response errors
+          if (response.error) {
+            const error = new Error(response.error.message || "An error occurred while sending the email");
+            return next(error);
+          }
+          
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
             accountName: accountName
@@ -1762,33 +1734,25 @@ module.exports.bsa = async (req, res, next) => {
 
 
 
-         //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email, // Resend requires only the email string
+            subject: 'DEBIT ALERT',
+            text: `Dear ${foundReciever.firstName}, your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}.`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Error handling for Resend
+          if (response.error) {
+            const error = new Error(response.error.message || 'An error occurred while sending the email');
+            return next(error);
+          }
+          
 
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
@@ -2185,34 +2149,25 @@ module.exports.tac = async (req, res, next) => {
          }
 
 
-
-         //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email, // Resend accepts email string or array of emails
+            subject: 'DEBIT ALERT',
+            text: `Your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Proper error handling
+          if (response.error) {
+            const error = new Error(response.error.message || 'An error occurred while sending email');
+            return next(error);
+          }
+          
 
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
@@ -2547,7 +2502,7 @@ module.exports.nrc = async (req, res, next) => {
          }
 
          // Create mailjet send email
-         const response = await resend.emails.send({
+         let response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -2606,36 +2561,25 @@ module.exports.nrc = async (req, res, next) => {
             let error = new Error("an error occurred on the server")
             return next(error)
          }
-
-
-
-         //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+          response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email, // Resend only needs the email address
+            subject: 'DEBIT ALERT',
+            text: `Your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Error handling (Resend always returns an object)
+          if (response.error) {
+            const error = new Error(response.error.message || 'An error occurred while sending the email');
+            return next(error);
+          }
+          
 
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
@@ -3037,33 +2981,25 @@ module.exports.imf = async (req, res, next) => {
 
 
 
-         //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email,
+            subject: 'DEBIT ALERT',
+            text: `Your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}.`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Error handling
+          if (response.error) {
+            const error = new Error(response.error.message || "An error occurred while sending the email");
+            return next(error);
+          }
+          
 
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
@@ -3455,35 +3391,25 @@ module.exports.cot = async (req, res, next) => {
             return next(error)
          }
 
-
-
-         //send email to the reciever
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${foundReciever.firstName}`
-                        }
-                     ],
-
-                     "Subject": "DEBIT ALERT",
-                     'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                     "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email,
+            subject: 'DEBIT ALERT',
+            text: `Dear ${foundReciever.firstName}, your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}.`,
+            html: RecieverRequestTemplate(
+              amount,
+              savedRecieverAccount.accountNumber,
+              userExist.firstName,
+              userExist.lastName
+            ),
+          });
+          
+          // Handle error if sending fails
+          if (response.error) {
+            const error = new Error(response.error.message || "An error occurred while sending the email");
+            return next(error);
+          }
+          
 
          //finding beneficiaries with that name
          let beneficiariesFound = await Beneficiaries.findOne({
@@ -3778,30 +3704,20 @@ module.exports.createDeposit = async (req, res, next) => {
       }
 
       //send admin email 
-      const requests = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${admin[0].email}`,
-                        "Name": `${admin[0].email}`
-                     }
-                  ],
-                  "Subject": "DEPOSIT REQUEST",
-                  "TextPart": `A user with the email $${userExist.email} made a deposit request`,
-                  "HTMLPart": AdminDepositRequestTemplate(userExist.email),
-               }
-            ]
-         })
-
-      if (!requests) {
-
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: admin[0].email,
+         subject: 'DEPOSIT REQUEST',
+         text: `A user with the email ${userExist.email} made a deposit request.`,
+         html: AdminDepositRequestTemplate(userExist.email),
+       });
+       
+       // Handle errors if email fails to send
+       if (response.error) {
+         const error = new Error(response.error.message || 'Failed to send deposit request email');
+         return next(error);
+       }
+       
 
       //retrieve  all deposit of this specific user
       let foundHistory = await History.find({ user: userExist })
@@ -3981,32 +3897,20 @@ module.exports.createWithdraw = async (req, res, next) => {
          return next(error)
 
       }
-
-      //send admin email 
-      const requests = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${admin[0].email}`,
-                        "Name": `${admin[0].email}`
-                     }
-                  ],
-                  "Subject": "DEBIT REQUEST",
-                  "TextPart": `A user with the email ${user.email} made a withdrawal request of $${amount}`,
-                  "HTMLPart": AdminDebitRequestTemplate(user.email, amount),
-               }
-            ]
-         })
-
-      if (!requests) {
-
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: admin[0].email,
+         subject: 'DEBIT REQUEST',
+         text: `A user with the email ${user.email} made a withdrawal request of $${amount}.`,
+         html: AdminDebitRequestTemplate(user.email, amount),
+       });
+       
+       // Error handling
+       if (response.error) {
+         const error = new Error(response.error.message || 'Failed to send admin debit request email');
+         return next(error);
+       }
+       
 
 
 
@@ -4238,29 +4142,20 @@ module.exports.sendAccount = async (req, res, next) => {
       }
 
       //send admin email 
-      const requestss = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${admin[0].email}`,
-                        "Name": `${admin[0].email}`
-                     }
-                  ],
-                  'TextPart': `A user with the email ${userExist.email} made a transfer request `,
-                  "HTMLPart": AdminTransferRequestTemplate(userExist.email),
-               }
-            ]
-         })
-
-      if (!requestss) {
-
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: admin[0].email,
+         subject: 'TRANSFER REQUEST',
+         text: `A user with the email ${userExist.email} made a transfer request.`,
+         html: AdminTransferRequestTemplate(userExist.email),
+       });
+       
+       // Handle error if email fails to send
+       if (response.error) {
+         const error = new Error(response.error.message || 'Failed to send transfer request email');
+         return next(error);
+       }
+       
 
 
 
@@ -4459,33 +4354,20 @@ module.exports.sendAccountWithinBank = async (req, res, next) => {
 
 
       //send email to the reciever
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${userExist.email}`,
-                        "Name": `${foundReciever.firstName}`
-                     }
-                  ],
-
-                  "Subject": "DEBIT ALERT",
-                  'TextPart': `Your account ${savedRecieverAccount.accountNumber} has been credited with  $${amount} by ${userExist.firstName} ${userExist.lastName}`,
-                  "HTMLPart": RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
-               }
-            ]
-         })
-
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
-
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: userExist.email,
+         subject: 'DEBIT ALERT',
+         text: `Your account ${savedRecieverAccount.accountNumber} has been credited with $${amount} by ${userExist.firstName} ${userExist.lastName}.`,
+         html: RecieverRequestTemplate(amount, savedRecieverAccount.accountNumber, userExist.firstName, userExist.lastName),
+       });
+       
+       // Error handling
+       if (response.error) {
+         const error = new Error(response.error.message || 'An error occurred while sending the email');
+         return next(error);
+       }
+       
       //finding beneficiaries with that name
       let beneficiariesFound = await Beneficiaries.findOne({
          accountName: accountName
@@ -4995,30 +4877,20 @@ module.exports.loan = async (req, res, next) => {
       }
 
       //send admin email 
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${admin[0].email}`,
-                        "Name": `${admin[0].email}`
-                     }
-                  ],
-                  "Subject": "LOAN REQUEST",
-                  'TextPart': `A user with the email ${userExist.email} request a loan  !`,
-                  "HTMLPart": AdminLoanRequestTemplate(userExist.email),
-               }
-            ]
-         })
-
-      if (!request) {
-
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: admin[0].email,
+         subject: 'LOAN REQUEST',
+         text: `A user with the email ${userExist.email} has requested a loan!`,
+         html: AdminLoanRequestTemplate(userExist.email),
+       });
+       
+       // Handle error if email fails to send
+       if (response.error) {
+         const error = new Error(response.error.message || 'Failed to send loan request email');
+         return next(error);
+       }
+       
 
       return res.status(200).json({
          response: 'Loan application successful'
