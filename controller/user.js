@@ -999,7 +999,7 @@ module.exports.createCard = async (req, res, next) => {
       //saving user
 
       //sending email to client about savedCard
-      const response = await resend.emails.send({
+      let response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: user.email,
          subject: 'CARD REQUEST',
@@ -1021,7 +1021,7 @@ module.exports.createCard = async (req, res, next) => {
       }
 
       //send admin email 
-      const response = await resend.emails.send({
+      response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: admin[0].email,
          subject: 'CARD REQUEST',
