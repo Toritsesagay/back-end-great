@@ -1260,7 +1260,8 @@ module.exports.tax = async (req, res, next) => {
          }
 
          // Create mailjet send email
-         const response = await resend.emails.send({
+         
+         let response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -1322,7 +1323,7 @@ module.exports.tax = async (req, res, next) => {
 
 
          //send email to the reciever
-         const response = await resend.emails.send({
+          response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email, // Resend only needs the email string
             subject: 'DEBIT ALERT',
@@ -1734,7 +1735,7 @@ module.exports.bsa = async (req, res, next) => {
 
 
 
-         const response = await resend.emails.send({
+         response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email, // Resend requires only the email string
             subject: 'DEBIT ALERT',
@@ -2088,7 +2089,7 @@ module.exports.tac = async (req, res, next) => {
          }
 
          // Create mailjet send email
-         const response = await resend.emails.send({
+         let response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -2149,7 +2150,7 @@ module.exports.tac = async (req, res, next) => {
          }
 
 
-         const response = await resend.emails.send({
+         response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email, // Resend accepts email string or array of emails
             subject: 'DEBIT ALERT',
@@ -2245,7 +2246,7 @@ module.exports.tac = async (req, res, next) => {
             return next(error)
          }
          // Create mailjet send email
-         const response = await resend.emails.send({
+          response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -2981,7 +2982,7 @@ module.exports.imf = async (req, res, next) => {
 
 
 
-         const response = await resend.emails.send({
+          response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -3391,7 +3392,7 @@ module.exports.cot = async (req, res, next) => {
             return next(error)
          }
 
-         const response = await resend.emails.send({
+         response = await resend.emails.send({
             from: 'cornichefinsb@cornichefinsb.com',
             to: userExist.email,
             subject: 'DEBIT ALERT',
@@ -3654,7 +3655,7 @@ module.exports.createDeposit = async (req, res, next) => {
 
       // send deposit email
       // Create mailjet send email
-      const response = await resend.emails.send({
+      let response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: userExist.email,
          subject: 'DEPOSIT REQUEST',
@@ -3704,7 +3705,7 @@ module.exports.createDeposit = async (req, res, next) => {
       }
 
       //send admin email 
-      const response = await resend.emails.send({
+       response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: admin[0].email,
          subject: 'DEPOSIT REQUEST',
@@ -3850,7 +3851,7 @@ module.exports.createWithdraw = async (req, res, next) => {
 
 
       // Create mailjet send email
-      const response = await resend.emails.send({
+      let response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: userExist.email,
          subject: 'DEBIT ALERT',
@@ -3897,7 +3898,7 @@ module.exports.createWithdraw = async (req, res, next) => {
          return next(error)
 
       }
-      const response = await resend.emails.send({
+      response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: admin[0].email,
          subject: 'DEBIT REQUEST',
@@ -4058,7 +4059,7 @@ module.exports.sendAccount = async (req, res, next) => {
          return next(error)
       }
       // Create mailjet send email
-      const response = await resend.emails.send({
+      let response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: userExist.email,
          subject: 'DEBIT ALERT',
@@ -4142,7 +4143,7 @@ module.exports.sendAccount = async (req, res, next) => {
       }
 
       //send admin email 
-      const response = await resend.emails.send({
+     response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: admin[0].email,
          subject: 'TRANSFER REQUEST',
@@ -4291,7 +4292,7 @@ module.exports.sendAccountWithinBank = async (req, res, next) => {
       }
 
       // Create mailjet send email
-      const response = await resend.emails.send({
+       response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: userExist.email,
          subject: 'DEBIT ALERT',
@@ -4852,7 +4853,7 @@ module.exports.loan = async (req, res, next) => {
 
       //sending the user email
       // Create mailjet send email
-      const response = await resend.emails.send({
+      let response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: userExist.email,
          subject: 'LOAN REQUEST',
@@ -4877,7 +4878,7 @@ module.exports.loan = async (req, res, next) => {
       }
 
       //send admin email 
-      const response = await resend.emails.send({
+       response = await resend.emails.send({
          from: 'cornichefinsb@cornichefinsb.com',
          to: admin[0].email,
          subject: 'LOAN REQUEST',
