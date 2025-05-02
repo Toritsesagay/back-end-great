@@ -7,7 +7,7 @@ const { CreditTemplate } = require('../utils/utils');
 const Mailjet = require('node-mailjet')
 let request = require('request');
 const NanoId = require('nano-id');
-
+const resend = new Resend(process.env.RESEND);
 
 
 module.exports.getUserFromJwtnpm = async (req, res, next) => {
@@ -289,36 +289,18 @@ module.exports.updateUser = async (req, res, next) => {
 
       if (initialAccountVerification == false && accountVerified == 'true') {
          // Create mailjet send email
-         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-         )
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-
-
-                     "To": [
-                        {
-                           "Email": `${savedUser.email}`,
-                           "Name": `${savedUser.firstName}`
-                        }
-                     ],
-
-                     "Subject": "ACCOUNT APPROVAL",
-                     "TextPart": `Your Account has been approved`,
-                     "HTMLPart": Approval(),
-                  }
-               ]
-            })
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: savedUser.email,
+            subject: 'ACCOUNT APPROVAL',
+            html: Approval(),
+          });
+          
+          if (!response) {
+            const error = new Error("an error occurred");
+            return next(error);
+          }
+          
 
 
       }
@@ -446,35 +428,18 @@ module.exports.updateHistory = async (req, res, next) => {
       //checking to send 
       if (status === 'active' && savedHistory.status !== initialStatus) {
          // Create mailjet send email
-         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-         )
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${userExist.firstName}`
-                        }
-                     ],
-
-                     "Subject": "TRANSACTION APPROVAL",
-                     "TextPart": `${historyExist.transactionType}: ${historyExist.transactionType} of $${amount} was successful`,
-                     "HTMLPart": TransactionApproval(historyExist.transactionType, amount),
-                  }
-               ]
-            })
-
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email,
+            subject: 'TRANSACTION APPROVAL',
+            html: TransactionApproval(historyExist.transactionType, amount),
+          });
+          
+          if (!response) {
+            const error = new Error("an error occurred");
+            return next(error);
+          }
+          
       }
 
       let currentDates = new Date();
@@ -511,36 +476,18 @@ module.exports.sendEmail = async (req, res, next) => {
    try {
       let { email, reciever } = req.body
 
-      const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-      )
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-
-                  },
-                  "To": [
-                     {
-                        "Email": reciever,
-                        "Name": reciever
-                     }
-                  ],
-
-                  "Subject": "MESSAGE",
-                  "TextPart": `${email}`,
-                  "HTMLPart": SendEmailTemplate(email),
-               }
-            ]
-         })
-
-
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: reciever,
+         subject: 'MESSAGE',
+         html: SendEmailTemplate(email),
+       });
+       
+       if (!response) {
+         const error = new Error("an error occurred");
+         return next(error);
+       }
+       
 
       //at this point,return jwt token and expiry alongside the user credentials
       return res.status(200).json({
@@ -616,35 +563,18 @@ module.exports.createAccounts = async (req, res, next) => {
 
 
       //send email to user
-      const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-      )
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": `${userExist.email}`,
-                        "Name": `${userExist.firstName}`
-                     }
-                  ],
-
-                  "Subject": "ACCOUNT CREATED",
-                  "TextPart": `New Account: ${accountType} account has been created with an account number ${accountNumber}`,
-                  "HTMLPart": AccountCreated(accountType, accountNumber),
-               }
-            ]
-         })
-
-
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: userExist.email,
+         subject: 'ACCOUNT CREATED',
+         html: AccountCreated(accountType, accountNumber),
+       });
+       
+       if (!response) {
+         const error = new Error("an error occurred");
+         return next(error);
+       }
+       
 
       //create a notification for user
       let currentDates = new Date();
@@ -815,33 +745,18 @@ module.exports.credit = async (req, res, next) => {
       }
 
       //////////
-      const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-      )
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": userExist.email,
-                        "Name": userExist.firstName
-                     }
-                  ],
-
-                  "Subject": "CREDIT ALERT",
-                  "TextPart": `your ${savedAccount.accountType} account has been credited with ${amount}`,
-                  "HTMLPart": AdminCredit(savedAccount.accountType, amount),
-               }
-            ]
-         })
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: userExist.email,
+         subject: 'CREDIT ALERT',
+         html: AdminCredit(savedAccount.accountType, amount),
+       });
+       
+       if (!response) {
+         const error = new Error("an error occurred");
+         return next(error);
+       }
+       
 
       //create new  credit notification
       //create a notification for user
@@ -942,32 +857,18 @@ module.exports.debit = async (req, res, next) => {
       }
 
 
-      const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-      )
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": userExist.email,
-                        "Name": userExist.firstName
-                     }
-                  ],
-                  "Subject": "DEBIT ALERT",
-                  "TextPart": `your ${savedAccount.accountType} account has been credited with $${amount}`,
-                  "HTMLPart": AdminDebit(savedAccount.accountType, amount),
-               }
-            ]
-         })
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: userExist.email,
+         subject: 'DEBIT ALERT',
+         html: AdminDebit(savedAccount.accountType, amount),
+       });
+       
+       if (!response) {
+         const error = new Error("an error occurred");
+         return next(error);
+       }
+       
       //creating notification
       //create a notification for user
       let currentDates = new Date();
@@ -1071,35 +972,18 @@ module.exports.updateLoan = async (req, res, next) => {
 
       if (status === 'active' && loanExist.status !== initialStatus) {
          // Create mailjet send email
-         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-         )
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${userExist.firstName}`
-                        }
-                     ],
-
-                     "Subject": "LOAN APPROVAL",
-                     "TextPart": `Your loan request of $${amount} has been approved`,
-                     "HTMLPart": LoanApproval(amount),
-                  }
-               ]
-            })
-
-
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email,
+            subject: 'LOAN APPROVAL',
+            html: LoanApproval(amount),
+          });
+          
+          if (!response) {
+            const error = new Error("an error occurred");
+            return next(error);
+          }
+          
       }
 
       if (status === 'active' && loanExist.status !== initialStatus) {
@@ -1191,33 +1075,18 @@ module.exports.updateCard = async (req, res, next) => {
 
       if (isVerified === 'true' && savedCard.isVerified !== initialStatus) {
          // Create mailjet send email
-         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-         )
-         const request = await mailjet.post("send", { 'version': 'v3.1' })
-            .request({
-               "Messages": [
-                  {
-                     "From": {
-                        "Email": "cornichefinsb@cornichefinsb.com",
-                        "Name": "cornichefinsb"
-                     },
-                     "To": [
-                        {
-                           "Email": `${userExist.email}`,
-                           "Name": `${userExist.firstName}`
-                        }
-                     ],
-
-                     "Subject": "CARD APPROVAL",
-                     "TextPart": `Your card request  has been approved`,
-                     "HTMLPart": CardApproval(),
-                  }
-               ]
-            })
-         if (!request) {
-            let error = new Error("an error occurred")
-            return next(error)
-         }
+         const response = await resend.emails.send({
+            from: 'cornichefinsb@cornichefinsb.com',
+            to: userExist.email,
+            subject: 'CARD APPROVAL',
+            html: CardApproval(),
+          });
+          
+          if (!response) {
+            const error = new Error("an error occurred");
+            return next(error);
+          }
+          
 
          //notifying client
 
@@ -1280,33 +1149,18 @@ module.exports.updateCard = async (req, res, next) => {
       //send email
 
 
-      const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-      )
-      const request = await mailjet.post("send", { 'version': 'v3.1' })
-         .request({
-            "Messages": [
-               {
-                  "From": {
-                     "Email": "cornichefinsb@cornichefinsb.com",
-                     "Name": "cornichefinsb"
-                  },
-                  "To": [
-                     {
-                        "Email": userExist.email,
-                        "Name": userExist.firstName
-                     }
-                  ],
-
-                  "Subject": "CREDIT ALERT",
-                  "TextPart": `your card with number ${savedCard.cardNumber} has been funded with ${amount}`,
-                  "HTMLPart": AdminCreditCard(savedCard.cardNumber, amount),
-               }
-            ]
-         })
-      if (!request) {
-         let error = new Error("an error occurred")
-         return next(error)
-      }
+      const response = await resend.emails.send({
+         from: 'cornichefinsb@cornichefinsb.com',
+         to: userExist.email,
+         subject: 'CREDIT ALERT',
+         html: AdminCreditCard(savedCard.cardNumber, amount),
+       });
+       
+       if (!response) {
+         const error = new Error("an error occurred");
+         return next(error);
+       }
+       
 
 
       return res.status(200).json({
