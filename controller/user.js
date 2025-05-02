@@ -5,6 +5,7 @@ const { User, Token, RecoverToken, PhoneToken, Card, History, Beneficiaries, Not
 const random_number = require("random-number")
 const NanoId = require('nano-id');
 const moment = require('moment')
+const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND);
 const Mailjet = require('node-mailjet')
 let request = require('request');

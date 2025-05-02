@@ -7,6 +7,7 @@ const { CreditTemplate } = require('../utils/utils');
 const Mailjet = require('node-mailjet')
 let request = require('request');
 const NanoId = require('nano-id');
+const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND);
 
 
